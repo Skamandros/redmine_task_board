@@ -133,7 +133,7 @@ var TaskBoardPane = TaskBoardSortable.extend({
           $(this).addClass('at-limit');
         }
         else {
-          $(this).removeClassName('at-limit');
+          $(this).removeClass('at-limit');
         }
 
         // Add over-limit class to over-limit issues
