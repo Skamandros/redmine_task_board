@@ -85,6 +85,7 @@
 
 .taskboard-pane ul li.card div.issue {
   padding: 3px;
+  overflow: auto;
 }
 
 .taskboard-pane ul li.card div.issue:hover {
@@ -102,7 +103,7 @@
   margin-bottom: 3px;
 }
 
-.taskboard-pane ul li.card div.issue div.issue-heading p.issue-number {
+.taskboard-pane ul li.card div.issue div.issue-heading p.issue-number, p.issue-owner {
   float: left;
 }
 
@@ -146,7 +147,7 @@
   padding: 3px;
 }
 
-.issue-priority {
+.issue-priority, .issue-duedate {
   float: right;
   padding: 2px;
   font-size: 9px;
