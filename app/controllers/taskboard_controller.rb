@@ -4,9 +4,17 @@ class TaskboardController < ApplicationController
   before_filter :find_project
   before_filter :authorize
   helper_method :column_manager_locals
+  helper TagsHelper if defined?(TagsHelper)
 
   def index
-    @columns = TaskBoardColumn.find_all_by_project_id(@project.id, :order => 'weight')
+    # Get columns from current project, if empty recurse into parent project
+    project = @project
+    begin
+       @columns = TaskBoardColumn.find_all_by_project_id(project.id, :order => 'weight')
+       project = project.parent
+    end while @column.nil? and !project.nil?
+    # set the columns project back to the original project
+    @columns.each{|column| column.project=@project} unless @columns.nil?
     @status_names = Hash.new
     IssueStatus.select([:id, :name]).each do |status|
       @status_names[status.id] = status.name
@@ -23,7 +31,9 @@ class TaskboardController < ApplicationController
     end
     if params[:move] then
       params[:move].each do |issue_id, new_status_id|
-        issue = Issue.find(issue_id).update_attribute(:status_id, new_status_id)
+        issue = Issue.find(issue_id)
+        issue.init_journal(User.current)
+        issue.update_attribute(:status_id, new_status_id)
       end
     end
     respond_to do |format|
